@@ -26,7 +26,7 @@ const Sidebar = () => {
     setMobileOpen(false)
   }, [location.pathname])
 
-  const role = 'EMPLOYEE'
+  const role = ''
 
   const sidebarContent = (
     <>

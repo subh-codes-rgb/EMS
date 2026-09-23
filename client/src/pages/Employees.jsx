@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { dummyEmployeeData, DEPARTMENTS } from "../assets/assets"
 import { Plus, Search } from "lucide-react"
 import EmployeeCard from "../components/EmployeeCard"
@@ -12,13 +12,13 @@ const Employees = () => {
   const [editEmployee, setEditEmployee] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
 
-  const fetchEmployees = (id) => {
-    if (typeof id === "string") {
-      setEmployees((prev) => prev.filter((emp) => (emp._id || emp.id) !== id))
-    } else {
-      setEmployees(dummyEmployeeData)
-    }
-  }
+  const fetchEmployees = useCallback(async() => {
+    setLoading(true)
+    setEmployees(dummyEmployeeData.filter((emp) => ( selectedDept ? emp.department === selectedDept : emp)))
+    setTimeout(() =>{
+      setLoading(false)
+    },1000)
+  },[selectedDept])
 
   const handleSaveEmployee = (employee) => {
     if (employee._id || employee.id) {
@@ -43,7 +43,7 @@ const Employees = () => {
       setLoading(false)
     }, 1000)
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [fetchEmployees])
 
   const filtered = employees
     .filter((emp) => (selectedDept ? emp.department === selectedDept : true))
